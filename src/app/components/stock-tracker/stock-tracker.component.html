@@ -1,0 +1,28 @@
+<header>
+  <h1>Stock Tracker</h1>
+  @if(userData) {
+  <h2>Hi {{ userData.name}}!</h2>
+  <h3>Joined on {{ userData.joined | date: 'fullDate'}}</h3>
+  } @else {
+  <p>No user details</p>
+  }
+  @if(largestTransaction) {
+  <h4>Largest Transaction: {{ largestTransaction.bought}} at {{ largestTransaction.price | currency: 'USD'}}</h4>
+  }
+  <div class="search">
+    <label for="search">Search: </label>
+    <input #searchInput id="search" type="text" placeholder="Find stock" [value]="search"
+      (input)="onSearchChange($event)" />
+  </div>
+</header>
+<main>
+
+  <section class="stocks">
+    @for(stock of stockData | stockFilter: search; track stock.symbol) {
+    <tracked-stock class="stocks__stock" [stock]="stock" />
+    }
+    @empty {
+    <p>No stocks!</p>
+    }
+  </section>
+</main>

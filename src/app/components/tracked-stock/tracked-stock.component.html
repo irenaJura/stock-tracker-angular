@@ -1,0 +1,29 @@
+<card>
+  <section class="header" #header>
+    {{stock.symbol}} ({{stock.description}})
+  </section>
+  <section class="details">
+    <div class="stack">
+      <span>Price</span>
+      {{stock.currentPrice | currency: 'USD'}}
+    </div>
+    @if(stock.change != undefined) {
+    <div class="stack">
+      <span>Change (%)</span>
+      <span [textColor]="stock.change < 0? '#ff4a4a' : '#10d41d'">{{stock.change | percent: '1.0-2'}}</span>
+    </div>
+    }
+    <div class="stack">
+      <span>Low</span>
+      {{stock.low | currency: 'USD'}}
+    </div>
+    <div class="stack">
+      <span>High</span>
+      {{stock.high | currency: 'USD'}}
+    </div>
+    <div class="stack">
+      <span>Opened</span>
+      {{stock.open | currency: 'USD'}}
+    </div>
+  </section>
+</card>

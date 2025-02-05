@@ -1,0 +1,33 @@
+header {
+  text-align: center;
+}
+main {
+  padding-left: var(--spacing-lg);
+  padding-right: var(--spacing-lg);
+  padding-bottom: var(--spacing-lg);
+}
+
+.search {
+  text-align: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.search > input {
+  min-height: 2rem;
+}
+.stocks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  align-items: center;
+}
+
+.stocks__stock {
+  width: 100%;
+}
+
+@media (min-width: 40rem) {
+  .stocks__stock {
+    max-width: 50rem;
+  }
+}

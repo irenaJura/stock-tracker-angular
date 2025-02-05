@@ -1,0 +1,22 @@
+.header {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.details {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-sm);
+  justify-content: space-around;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.stack > span {
+  font-weight: 600;
+}
