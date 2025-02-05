@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
 import { getStockDataObservable, StockTransaction, User } from './api/stockApi';
 import { StockTrackerComponent } from './components/stock-tracker/stock-tracker.component';

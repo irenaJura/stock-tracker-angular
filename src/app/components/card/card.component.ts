@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  ContentChild,
+  ElementRef,
+  AfterContentInit,
+} from '@angular/core';
 
 const headerStyles = {
   marginLeft: 'calc(-1 * var(--spacing-lg)',
@@ -15,6 +20,10 @@ const headerStyles = {
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
 })
-export class CardComponent {
-  // Todo: style projected header
+export class CardComponent implements AfterContentInit {
+  @ContentChild('header') headerElement!: ElementRef;
+
+  ngAfterContentInit() {
+    Object.assign(this.headerElement.nativeElement.style, headerStyles);
+  }
 }
