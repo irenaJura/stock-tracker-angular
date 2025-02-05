@@ -7,7 +7,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, map, filter } from 'rxjs';
 import { Stock, StockTransaction, User } from '../../api/stockApi';
 import { TrackedStockComponent } from '../tracked-stock/tracked-stock.component';
 import { StockFilterPipe } from '../../stock-filter.pipe';
@@ -58,18 +58,22 @@ export class StockTrackerComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
   ngOnInit() {
-    const stockSubscription = this.getStockData.subscribe({
-      next: (data: Stock[]) => (this.stockData = data),
-      complete: () => (this.stockData = []),
-    });
+    const stockSubscription = this.getStockData
+      .pipe(map(appendStockChange))
+      .subscribe({
+        next: (data: Stock[]) => (this.stockData = data),
+        complete: () => (this.stockData = []),
+      });
 
     const userSubscription = this.getUserData.subscribe(
       (data) => (this.userData = data)
     );
 
-    const transactionsSubscription = this.getTransactionsData.subscribe(
-      (data) => (this.largestTransaction = data)
-    );
+    const transactionsSubscription = this.getTransactionsData
+      .pipe(
+        filter((data) => data.price > (this.largestTransaction?.price || 0))
+      )
+      .subscribe((data) => (this.largestTransaction = data));
 
     this.stockSubscription = stockSubscription;
     this.userSubscription = userSubscription;
