@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
-import { getStockDataObservable, StockTransaction, User } from './api/stockApi';
+import { RouterOutlet } from '@angular/router';
 import { StockTrackerComponent } from './components/stock-tracker/stock-tracker.component';
+import { getStockDataObservable, StockTransaction, User } from './api/stockApi';
+import { Observable, of, from } from 'rxjs';
 
 const user: User = {
   id: '1',
@@ -41,13 +42,12 @@ const transactions: StockTransaction[] = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [StockTrackerComponent],
+  imports: [RouterOutlet, StockTrackerComponent],
   templateUrl: './app.component.html',
 })
 export class AppComponent {
   title = 'stock-tracker';
   stockDataSource = getStockDataObservable();
-  // todo: initialize
-  userDataSource!: Observable<User>;
-  transactionsDataSource!: Observable<StockTransaction>;
+  userDataSource: Observable<User> = of(user);
+  transactionsDataSource: Observable<StockTransaction> = from(transactions);
 }

@@ -4,14 +4,16 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Stock, StockTransaction, User } from '../../api/stockApi';
+import { TrackedStockComponent } from '../tracked-stock/tracked-stock.component';
 import { StockFilterPipe } from '../../stock-filter.pipe';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 
 import { calculatePercentDiff } from '../../util';
-import { TrackedStockComponent } from '../tracked-stock/tracked-stock.component';
 
 function appendStockChange(data: Stock[]): Stock[] {
   return data.map((stock) => ({
@@ -27,7 +29,7 @@ function appendStockChange(data: Stock[]): Stock[] {
   imports: [TrackedStockComponent, StockFilterPipe, DatePipe, CurrencyPipe],
   styleUrl: './stock-tracker.component.css',
 })
-export class StockTrackerComponent implements AfterViewInit {
+export class StockTrackerComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('searchInput') searchElement!: ElementRef;
   @Input({ required: true }) getStockData!: Observable<Stock[]>;
   @Input({ required: true }) getUserData!: Observable<User>;
@@ -55,11 +57,31 @@ export class StockTrackerComponent implements AfterViewInit {
       this.searchElement.nativeElement.focus();
     }
   }
-  // Todo: subscribe to stockSubscription
-  // Todo: subscribe to userSubscription
+  ngOnInit() {
+    const stockSubscription = this.getStockData.subscribe({
+      next: (data: Stock[]) => (this.stockData = data),
+      complete: () => (this.stockData = []),
+    });
 
+    const userSubscription = this.getUserData.subscribe(
+      (data) => (this.userData = data)
+    );
+
+    const transactionsSubscription = this.getTransactionsData.subscribe(
+      (data) => (this.largestTransaction = data)
+    );
+
+    this.stockSubscription = stockSubscription;
+    this.userSubscription = userSubscription;
+    this.transactionsSubscription = transactionsSubscription;
+  }
   onSearchChange(event: Event) {
     const target = event.target as HTMLInputElement;
     this.search = target.value;
+  }
+  ngOnDestroy() {
+    this.stockSubscription?.unsubscribe();
+    this.userSubscription?.unsubscribe();
+    this.transactionsSubscription?.unsubscribe();
   }
 }
