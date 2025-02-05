@@ -1,19 +1,31 @@
-import { Directive, ElementRef, Input } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  Input,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 
 @Directive({
   selector: '[textColor]',
   standalone: true,
 })
-export class TextColorDirective {
+export class TextColorDirective implements OnInit, OnChanges {
   @Input() textColor: string = '';
 
-  constructor(private element: ElementRef) {
+  constructor(private element: ElementRef) {}
+
+  ngOnInit() {
     this.changeColor();
   }
 
-  // Todo: initalize text color
-
-  // Todo: handle changes to input
+  ngOnChanges(changes: SimpleChanges) {
+    const colorChange = changes['textColor'];
+    if (colorChange && colorChange.currentValue !== colorChange.previousValue) {
+      this.changeColor();
+    }
+  }
 
   changeColor() {
     this.element.nativeElement.style.color = this.textColor;
